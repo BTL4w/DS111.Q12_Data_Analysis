@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Data
+data/
+!data/.gitkeep
+!data/database/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/exports/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Exports
+*.csv
+*.json
+!config/*.json
+!requirements.txt
+
+# Temporary files
+*.tmp
+temp/
+
+# Ignore folder
+.ignore/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Models
+models/checkpoints/
+models/best_models/
+!models/.gitkeep
+
+# Reports (keep structure, ignore large files)
+reports/figures/*.png
+reports/figures/*.jpg
+reports/reports/*.pdf
+!reports/.gitkeep
+

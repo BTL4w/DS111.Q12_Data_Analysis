@@ -1,0 +1,43 @@
+{
+  "api": {
+    "base_url": "https://tiki.vn",
+    "product_api": "https://tiki.vn/api/v2/products/{}",
+    "review_api": "https://tiki.vn/api/v2/reviews",
+    "category_url": "https://tiki.vn/laptop/c8095?page={}",
+    "request_delay": 1,
+    "max_retries": 3,
+    "timeout": 30
+  },
+  "crawler": {
+    "user_agents": [
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    ],
+    "max_pages_per_crawl": null,
+    "max_products_per_category": 250,
+    "products_per_page": 48,
+    "crawl_reviews": false,
+    "categories_file": "config/categories.json",
+    "max_workers": 10,
+    "rate_limit_per_second": 3
+  },
+  "scheduler": {
+    "interval_hours": 6,
+    "run_on_start": true
+  },
+  "database": {
+    "path": "data/database.db"
+  },
+  "logging": {
+    "level": "INFO",
+    "crawler_log": "logs/crawler.log",
+    "scheduler_log": "logs/scheduler.log",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  },
+  "export": {
+    "output_dir": "data/exports",
+    "auto_export_after_crawl": true
+  }
+}
+
