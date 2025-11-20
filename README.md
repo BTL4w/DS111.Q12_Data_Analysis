@@ -13,15 +13,26 @@ Dự án này bao gồm:
 
 Xem hướng dẫn chi tiết tại [QUICK_START.md](QUICK_START.md)
 
-### Crawl dữ liệu
+### 1. Crawl dữ liệu
 ```bash
 python scripts/crawl.py
 ```
+→ Lưu JSON vào `data/raw/`
 
-### Export to CSV
+### 2. Build/Update Database
+```bash
+# Lần đầu tiên
+python scripts/build_db.py
+
+# Các lần sau
+python scripts/update_db.py
+```
+
+### 3. Export to CSV
 ```bash
 python scripts/export_to_csv.py
 ```
+→ Lưu CSV vào `data/exports/`
 
 ## 📁 Cấu trúc dự án
 
@@ -38,6 +49,10 @@ tiki_crawl/
 │   ├── utils/        # Utilities
 │   └── visualization/ # Visualization
 ├── scripts/          # Standalone scripts
+│   ├── crawl.py     # Crawl dữ liệu (chỉ lưu JSON)
+│   ├── build_db.py  # Build database từ JSON
+│   ├── update_db.py # Update database từ JSON
+│   └── export_to_csv.py # Export CSV từ database
 ├── models/           # Saved models
 ├── reports/          # Báo cáo và visualizations
 └── config/           # Configuration files
@@ -59,13 +74,15 @@ Chỉnh sửa `config/config.json` để tùy chỉnh:
 
 ## 📊 Workflow
 
-1. **Thu thập dữ liệu**: `scripts/crawl.py`
-2. **Khám phá dữ liệu**: `notebooks/01_data_exploration.ipynb`
-3. **Làm sạch dữ liệu**: `notebooks/02_data_cleaning.ipynb`
-4. **Feature Engineering**: `notebooks/03_feature_engineering.ipynb`
-5. **Phân tích khám phá**: `notebooks/04_eda.ipynb`
-6. **Huấn luyện model**: `notebooks/05_model_training.ipynb`
-7. **Dự đoán**: `notebooks/06_prediction.ipynb`
+1. **Thu thập dữ liệu**: `scripts/crawl.py` → Lưu JSON vào `data/raw/`
+2. **Xây dựng database**: `scripts/build_db.py` hoặc `scripts/update_db.py` → Tạo/cập nhật database
+3. **Export CSV**: `scripts/export_to_csv.py` → Export CSV từ database
+4. **Khám phá dữ liệu**: `notebooks/01_data_exploration.ipynb`
+5. **Làm sạch dữ liệu**: `notebooks/02_data_cleaning.ipynb`
+6. **Feature Engineering**: `notebooks/03_feature_engineering.ipynb`
+7. **Phân tích khám phá**: `notebooks/04_eda.ipynb`
+8. **Huấn luyện model**: `notebooks/05_model_training.ipynb`
+9. **Dự đoán**: `notebooks/06_prediction.ipynb`
 
 ## 📝 Tài liệu
 

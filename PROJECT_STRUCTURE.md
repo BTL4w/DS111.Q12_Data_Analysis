@@ -7,7 +7,7 @@ Dự án: **Phân tích và dự đoán doanh số sản phẩm trên sàn thư�
 ## Cấu trúc folder
 
 ```
-tiki_crawl/
+ds111_data_analysis/
 ├── data/                      # Dữ liệu
 │   ├── raw/                  # Dữ liệu crawl gốc (JSON)
 │   ├── processed/            # Dữ liệu đã xử lý, làm sạch
@@ -70,8 +70,10 @@ tiki_crawl/
 │   └── training/            # Training logs
 │
 ├── scripts/                  # Standalone scripts
-│   ├── crawl.py            # Main crawl script
-│   └── export_to_csv.py    # Export script
+│   ├── crawl.py            # Crawl script (only crawl, save JSON)
+│   ├── build_db.py         # Build database from JSON files
+│   ├── update_db.py         # Update database from JSON files
+│   └── export_to_csv.py    # Export database to CSV
 │
 ├── tests/                    # Unit tests
 │   ├── test_crawler.py
@@ -122,8 +124,10 @@ Báo cáo và visualizations:
 
 ### 📁 `scripts/`
 Standalone scripts để chạy:
-- **crawl.py**: Script crawl dữ liệu
-- **export_to_csv.py**: Script export CSV
+- **crawl.py**: Script crawl dữ liệu (chỉ crawl và lưu JSON, không lưu database)
+- **build_db.py**: Script build database từ JSON files (lần đầu tiên)
+- **update_db.py**: Script update database từ JSON files (các lần sau)
+- **export_to_csv.py**: Script export database ra CSV files
 
 ### 📁 `tests/`
 Unit tests cho các modules
@@ -132,32 +136,41 @@ Unit tests cho các modules
 
 1. **Thu thập dữ liệu** (`scripts/crawl.py`)
    - Crawl dữ liệu từ Tiki
-   - Lưu vào database và `data/raw/`
+   - Lưu JSON vào `data/raw/` (không lưu vào database)
 
-2. **Khám phá dữ liệu** (`notebooks/01_data_exploration.ipynb`)
-   - Load dữ liệu từ database
+2. **Xây dựng/Cập nhật database** (`scripts/build_db.py` hoặc `scripts/update_db.py`)
+   - **Build database**: Import dữ liệu từ JSON vào database mới (`build_db.py`)
+   - **Update database**: Cập nhật database từ JSON (thêm mới hoặc cập nhật) (`update_db.py`)
+   - Database được lưu tại `data/database/tiki_products_multi.db`
+
+3. **Export CSV** (`scripts/export_to_csv.py`)
+   - Export dữ liệu từ database ra CSV
+   - Lưu vào `data/exports/`
+
+4. **Khám phá dữ liệu** (`notebooks/01_data_exploration.ipynb`)
+   - Load dữ liệu từ database hoặc CSV
    - Hiểu cấu trúc dữ liệu
 
-3. **Làm sạch dữ liệu** (`notebooks/02_data_cleaning.ipynb`, `src/analysis/data_cleaner.py`)
+5. **Làm sạch dữ liệu** (`notebooks/02_data_cleaning.ipynb`, `src/analysis/data_cleaner.py`)
    - Xử lý missing values
    - Xử lý outliers
    - Lưu vào `data/processed/`
 
-4. **Feature Engineering** (`notebooks/03_feature_engineering.ipynb`, `src/analysis/feature_engineering.py`)
+6. **Feature Engineering** (`notebooks/03_feature_engineering.ipynb`, `src/analysis/feature_engineering.py`)
    - Tạo features mới
    - Feature selection
 
-5. **Phân tích khám phá** (`notebooks/04_eda.ipynb`, `src/visualization/plots.py`)
+7. **Phân tích khám phá** (`notebooks/04_eda.ipynb`, `src/visualization/plots.py`)
    - Phân tích xu hướng
    - Tạo visualizations
    - Lưu vào `reports/figures/`
 
-6. **Huấn luyện model** (`notebooks/05_model_training.ipynb`, `src/models/`)
+8. **Huấn luyện model** (`notebooks/05_model_training.ipynb`, `src/models/`)
    - Train các models
    - Evaluate và chọn best model
    - Lưu vào `models/best_models/`
 
-7. **Dự đoán** (`notebooks/06_prediction.ipynb`)
+9. **Dự đoán** (`notebooks/06_prediction.ipynb`)
    - Sử dụng best model để dự đoán
    - Tạo báo cáo
 

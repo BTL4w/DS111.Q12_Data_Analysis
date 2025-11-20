@@ -54,9 +54,42 @@ python scripts/crawl.py --config config/my_config.json
 
 ### Kết quả sau khi crawl
 
-- **Database**: `data/database/tiki_products_multi.db` (SQLite)
 - **Raw JSON**: `data/raw/parallel_crawl_results_YYYYMMDD_HHMMSS.json`
 - **Logs**: `logs/crawler/parallel_crawl_YYYYMMDD_HHMMSS.log`
+
+**Lưu ý**: Script `crawl.py` chỉ crawl và lưu JSON, không lưu vào database. Để import vào database, sử dụng `build_db.py` hoặc `update_db.py`.
+
+## 🗄️ Xây dựng/Cập nhật Database
+
+### Build database từ JSON (lần đầu tiên)
+
+```bash
+# Sử dụng file JSON mới nhất
+python scripts/build_db.py
+
+# Chỉ định file JSON cụ thể
+python scripts/build_db.py --json data/raw/parallel_crawl_results_20251121_022421.json
+
+# Chỉ định database path
+python scripts/build_db.py --db data/database/my_database.db
+```
+
+### Update database từ JSON
+
+```bash
+# Cập nhật từ file JSON mới nhất
+python scripts/update_db.py
+
+# Cập nhật từ file JSON cụ thể
+python scripts/update_db.py --json data/raw/parallel_crawl_results_20251121_022421.json
+
+# Cập nhật từ TẤT CẢ file JSON trong data/raw
+python scripts/update_db.py --all
+```
+
+### Kết quả
+
+- **Database**: `data/database/tiki_products_multi.db` (SQLite)
 
 ## 📊 Export to CSV
 
@@ -88,17 +121,62 @@ python scripts/crawl.py --workers 10 --rate-limit 3
 
 Chờ quá trình crawl hoàn tất. Bạn sẽ thấy:
 - Số lượng categories đã crawl
-- Số lượng products đã crawl và lưu vào database
+- Số lượng products đã crawl
 - Tốc độ crawl (products/second)
 - Thời gian thực hiện
+- File JSON được lưu tại `data/raw/`
 
-### Bước 2: Export ra CSV
+### Bước 2: Build/Update Database
+
+**Lần đầu tiên (build database mới):**
+```bash
+python scripts/build_db.py
+```
+
+**Các lần sau (cập nhật database):**
+```bash
+python scripts/update_db.py
+```
+
+Hoặc nếu bạn có nhiều file JSON và muốn import tất cả:
+```bash
+python scripts/update_db.py --all
+```
+
+### Bước 3: Export ra CSV
 
 ```bash
 python scripts/export_to_csv.py
 ```
 
 Sau khi export xong, kiểm tra thư mục `data/exports/` để lấy các file CSV.
+
+## 🔄 Workflow với Google Drive
+
+Nếu bạn thường xuyên xóa database local và upload JSON lên Drive:
+
+1. **Crawl dữ liệu:**
+   ```bash
+   python scripts/crawl.py
+   ```
+
+2. **Upload JSON lên Google Drive** (file trong `data/raw/`)
+
+3. **Download JSON từ Drive về local** (vào `data/raw/`)
+
+4. **Build/Update database:**
+   ```bash
+   # Lần đầu tiên
+   python scripts/build_db.py
+   
+   # Các lần sau
+   python scripts/update_db.py --all
+   ```
+
+5. **Export CSV:**
+   ```bash
+   python scripts/export_to_csv.py
+   ```
 
 ## ⚙️ Tùy chỉnh danh mục crawl
 
@@ -164,17 +242,19 @@ SELECT COUNT(*) FROM products;
 
 ### Lỗi: Database not found
 
-**Nguyên nhân**: Chưa chạy crawl hoặc đường dẫn database sai.
+**Nguyên nhân**: Chưa build database từ JSON hoặc đường dẫn database sai.
 
 **Giải pháp**: 
-- Chạy `python scripts/crawl.py` trước để tạo database
+- Chạy `python scripts/build_db.py` để tạo database từ JSON
+- Hoặc `python scripts/update_db.py` nếu đã có database
 - Kiểm tra đường dẫn trong `scripts/export_to_csv.py` (mặc định: `data/database/tiki_products_multi.db`)
 
 ### Crawl bị gián đoạn
 
 **Giải pháp**: 
-- Chạy lại `python scripts/crawl.py`, script sẽ tiếp tục crawl các danh mục chưa hoàn thành
+- Chạy lại `python scripts/crawl.py`, script sẽ crawl lại từ đầu
 - Kiểm tra log để xem lỗi cụ thể
+- File JSON đã crawl sẽ được lưu, có thể dùng `update_db.py` để import vào database
 
 ### Rate limit quá cao
 
