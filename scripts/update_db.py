@@ -296,31 +296,52 @@ def update_database_from_all_json(json_files: list, db_path: str, logger):
 
 def main():
     """Main entry point"""
-    parser = argparse.ArgumentParser(description='Update database from ALL JSON files in data/raw')
+    parser = argparse.ArgumentParser(description='Update database from JSON files in data/raw')
     parser.add_argument('--db', default='data/database/tiki_products_multi.db', 
                        help='Path to database file')
     parser.add_argument('--raw-dir', default='data/raw',
                        help='Directory containing JSON files')
+    parser.add_argument('--latest', action='store_true',
+                       help='Only process the latest JSON file')
+    parser.add_argument('--json', type=str,
+                       help='Process specific JSON file')
     
     args = parser.parse_args()
     
     logger = setup_logging()
     
-    # Get all JSON files sorted by time (oldest first)
+    # Determine which files to process
     raw_dir = Path(args.raw_dir)
-    json_files = get_sorted_json_files(raw_dir)
     
-    if not json_files:
-        logger.error(f"No JSON files found in {raw_dir}")
-        sys.exit(1)
-    
-    logger.info(f"Found {len(json_files)} JSON files to process")
+    if args.json:
+        # Process specific file
+        json_file = Path(args.json)
+        if not json_file.exists():
+            logger.error(f"JSON file not found: {json_file}")
+            sys.exit(1)
+        json_files = [json_file]
+        logger.info(f"Processing specific file: {json_file.name}")
+    elif args.latest:
+        # Process only latest file
+        all_files = get_sorted_json_files(raw_dir)
+        if not all_files:
+            logger.error(f"No JSON files found in {raw_dir}")
+            sys.exit(1)
+        json_files = [all_files[-1]]  # Latest file (last in sorted list)
+        logger.info(f"Processing latest file: {json_files[0].name}")
+    else:
+        # Process all files (default)
+        json_files = get_sorted_json_files(raw_dir)
+        if not json_files:
+            logger.error(f"No JSON files found in {raw_dir}")
+            sys.exit(1)
+        logger.info(f"Processing all {len(json_files)} JSON files (oldest first)")
     
     # Ensure database directory exists
     db_path = Path(args.db)
     db_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Update database from all files
+    # Update database
     update_database_from_all_json(json_files, str(db_path), logger)
 
 

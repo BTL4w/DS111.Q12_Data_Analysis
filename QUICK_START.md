@@ -77,14 +77,14 @@ python scripts/build_db.py --db data/database/my_database.db
 ### Update database từ JSON
 
 ```bash
-# Cập nhật từ file JSON mới nhất
+# Cập nhật từ TẤT CẢ file JSON (mặc định, xử lý theo thứ tự thời gian)
 python scripts/update_db.py
+
+# Chỉ cập nhật file JSON mới nhất
+python scripts/update_db.py --latest
 
 # Cập nhật từ file JSON cụ thể
 python scripts/update_db.py --json data/raw/parallel_crawl_results_20251121_022421.json
-
-# Cập nhật từ TẤT CẢ file JSON trong data/raw
-python scripts/update_db.py --all
 ```
 
 ### Kết quả
@@ -135,12 +135,11 @@ python scripts/build_db.py
 
 **Các lần sau (cập nhật database):**
 ```bash
+# Cập nhật từ tất cả file JSON (mặc định)
 python scripts/update_db.py
-```
 
-Hoặc nếu bạn có nhiều file JSON và muốn import tất cả:
-```bash
-python scripts/update_db.py --all
+# Hoặc chỉ cập nhật file mới nhất
+python scripts/update_db.py --latest
 ```
 
 ### Bước 3: Export ra CSV
