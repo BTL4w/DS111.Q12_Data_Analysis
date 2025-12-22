@@ -33,7 +33,7 @@ def extract_data_from_csv(data_dir):
     
     try:
         # A. Load SALES (Cần ghép thời gian)
-        sales_path = os.path.join(data_dir, 'sales_history_final.csv')
+        sales_path = os.path.join(data_dir, 'sales_history_processed.csv')
         df_sales = pd.read_csv(sales_path, usecols=['product_id', 'quantity_sold', 'date', 'crawl_section'])
         # Xử lý thời gian
         df_sales = process_crawl_time(df_sales)
@@ -42,13 +42,13 @@ def extract_data_from_csv(data_dir):
         print(f"1. Đã load Sales: {len(df_sales):,} dòng")
 
         # B. Load PRICE (Cần ghép thời gian)
-        price_path = os.path.join(data_dir, 'price_history_final.csv')
+        price_path = os.path.join(data_dir, 'price_history_processed.csv')
         df_price = pd.read_csv(price_path, usecols=['product_id', 'price', 'date', 'crawl_section'])
         df_price = process_crawl_time(df_price)
         print(f"2. Đã load Price: {len(df_price):,} dòng")
 
         # C. Load RATING (Đã có sẵn crawl_timestamp, file cleaned)
-        rating_path = os.path.join(data_dir, 'rating_history_cleaned.csv')
+        rating_path = os.path.join(data_dir, 'ratings_processed.csv')
         df_rating = pd.read_csv(rating_path, usecols=['product_id', 'rating_average', 'review_count', 'crawl_timestamp'])
         df_rating['crawl_timestamp'] = pd.to_datetime(df_rating['crawl_timestamp']) # Convert sang datetime
         print(f"3. Đã load Rating: {len(df_rating):,} dòng")
